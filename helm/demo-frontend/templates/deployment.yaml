@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}
+  labels:
+    app.kubernetes.io/name: {{ .Values.appName }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/component: {{ .Values.app.componentName }}
+    app.kubernetes.io/part-of: {{ .Values.partOf }}
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: {{ .Release.Name }}
+      app.kubernetes.io/component: {{ .Values.app.componentName }}
+      app.kubernetes.io/part-of: {{ .Values.partOf }}
+  replicas: 2
+  revisionHistoryLimit: 3
+  template:
+    metadata:
+      name: {{ .Release.Name }}
+      labels:
+        app.kubernetes.io/instance: {{ .Release.Name }}
+        app.kubernetes.io/component: {{ .Values.app.componentName }}
+        app.kubernetes.io/part-of: {{ .Values.partOf }}
+    spec:
+      imagePullSecrets:
+        - name: "registry-lafrasia" # "k8s-demo-registry"
+      containers:
+        - name: {{ .Release.Name }}
+          image: "registry.digitalocean.com/lafrasia/react-k8s-demo:latest" #  "registry.digitalocean.com/lafrasia/lafrasia-back:latest"
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: {{ .Values.app.listen }}
+              protocol: TCP

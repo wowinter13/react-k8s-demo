@@ -1,0 +1,7 @@
+appName: react-k8s-demo
+partOf: demo
+
+app:
+  componentName: app
+  listen: 3000
+  url: sometestdomain.me
